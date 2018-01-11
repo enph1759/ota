@@ -1,28 +1,22 @@
 import sys, os, datetime, time
 import numpy as np
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
-from src.testing import test_1D_torsion, test_pupil_detection, compare_torsion_results, test_eyelid_removal, test_2D_torsion
-from src.helpers import manual_torsion_tracking
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
+
+
 from src.gui import torsion_application
 from src.data.data import Data
 from src.torsion.xcorr2d import xcorr2d
 from src.video import video as v
 from src.iris.iris import iris_transform
 from src.pupil.pupil import Pupil
-from src.testing import test_eyelid_detection
+
 
 '''
 Main functions go here
 '''
-# test_1D_torsion.run_test()
-# test_2D_torsion.run_test()
-# test_pupil_detection.run_test()
-# manual_torsion_tracking.main()
-# compare_torsion_results.run_test()
-# test_eyelid_removal.run_test()
-# test_2D_torsion.run_test()
-# torsion_application.run_test()
-# test_eyelid_detection.run_test()
+
+torsion_application.run()
+
 
 def transform(segment, resolution, window_height, mode='', **kw):
 

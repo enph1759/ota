@@ -65,7 +65,7 @@ class OcularTorsionApplication(tk.Tk):
         self.save_path = tk.StringVar()
 
         self.pupil_list = None
-        self.data = dat.Data()
+        #self.data = dat.Data(name='test')
 
         self.torsion = []
 
