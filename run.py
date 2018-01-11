@@ -1,6 +1,8 @@
 import sys, os, datetime, time
 import numpy as np
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
+
+
 from src.gui import torsion_application
 from src.data.data import Data
 from src.torsion.xcorr2d import xcorr2d
@@ -11,6 +13,9 @@ from src.pupil.pupil import Pupil
 '''
 Main functions go here
 '''
+
+# torsion_application.run()
+
 
 def transform(segment, resolution, window_height, mode='', **kw):
 
