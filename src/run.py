@@ -1,28 +1,16 @@
 import sys, os, datetime, time
 import numpy as np
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
-from src.testing import test_1D_torsion, test_pupil_detection, compare_torsion_results, test_eyelid_removal, test_2D_torsion
-from src.helpers import manual_torsion_tracking
 from src.gui import torsion_application
 from src.data.data import Data
 from src.torsion.xcorr2d import xcorr2d
 from src.video import video as v
 from src.iris.iris import iris_transform
 from src.pupil.pupil import Pupil
-from src.testing import test_eyelid_detection
 
 '''
 Main functions go here
 '''
-# test_1D_torsion.run_test()
-# test_2D_torsion.run_test()
-# test_pupil_detection.run_test()
-# manual_torsion_tracking.main()
-# compare_torsion_results.run_test()
-# test_eyelid_removal.run_test()
-# test_2D_torsion.run_test()
-# torsion_application.run_test()
-# test_eyelid_detection.run_test()
 
 def transform(segment, resolution, window_height, mode='', **kw):
 
@@ -167,3 +155,99 @@ def corr2d(video_path, verborose=True, **kw):
 
             if verborose:
                 print('Saving {} {} results.'.format(method, mode))
+
+
+def interpolation_subset_method(video_path, verborose=True, **kw):
+
+    # get parameters from kw args
+    start_frame = kw.get('start_frame', 0)
+    end_frame = kw.get('end_frame', -1)
+    transform_resolution = kw.get('transform_resolution', 1)
+    interp_resolution = kw.get('interp_resolution', 0.1)
+    upsample_resolution = kw.get('upsample_resolution', 0.1)
+    interp_threshold = kw.get('interp_threshold', 0.3)
+    upsample_threshold = kw.get('upsample_threshold', 0)
+    interp_start = kw.get('interp_start', 250)
+    upsample_start = kw.get('upsample_start', 2500)
+    window_length = kw.get('window_length', 50)
+    window_height = kw.get('window_height', 30)
+    max_angle = kw.get('max_angle', 25)
+    pupil_threshold = kw.get('pupil_threshold', 10)
+    im_crop = kw.get('im_crop', None) # List of crop indeces of form [row_lower_lim, row_upper_lim, col_lower_lim, col_upper_lim]
+
+    video_name = os.path.basename(video_path)
+
+    # Create dict to temporarily hold important data
+    data = {
+        'p_center_row' : [],
+        'p_center_col' : [],
+        'p_radius' : [],
+        'torsion' : [],
+    }
+
+    # save all results as data objects within in a folder
+    now = datetime.datetime.now().strftime("%Y_%m_%d")
+    file_path = os.path.abspath(os.path.join(os.curdir, 'results', video_name, now))
+    if not os.path.isdir(file_path):
+        os.makedirs(file_path)
+
+    # create video object
+    video = v.Video(video_path)
+
+    metadata = kw
+    # TODO add more?
+    metadata['VIDEO_FPS'] = video.fps
+
+    # create the reference windows
+    first_frame = video[start_frame]
+
+    # Crop the video frame
+    if im_crop is not None:
+        first_frame = first_frame[im_crop[0]:im_crop[1], im_crop[2]:im_crop[3]]
+
+    # Find first frame pupil and populate data lists
+    pup = Pupil(first_frame, threshold=pupil_threshold)
+    data['p_center_col'].append(pupil.center_col)
+    data['p_center_row'].append(pupil.center_row)
+    data['p_radius'].append(pupil.radius)
+    data['torsion'].append(0)
+
+    # Create the reference window from the first frame
+    iris_segment_interp = iris_transform(first_frame, pup, window_height, theta_resolution=transform_resolution)
+    reference_window = iris_segment_interp[:, slice(interp_start,interp_start+window_length)]
+
+    if verborose:
+        print('Starting batch 2D Cross Correlation with upsample and interpolation ...')
+        start_time = time.time()
+
+    for I in video[start_frame+1:end_frame]:
+        # Crop frame
+        if im_crop is not None:
+            I = I[im_crop[0]:im_crop[1], im_crop[2]:im_crop[3]]
+
+        # find pupil in frame
+        pup = Pupil(I, threshold=pupil_threshold)
+        data['p_center_col'].append(pupil.center_col)
+        data['p_center_row'].append(pupil.center_row)
+        data['p_radius'].append(pupil.radius)
+
+        # Extract the iris segment
+        P = iris_transform(I, pup, window_height, theta_resolution=transform_resolution)
+
+        # Find the torsion
+        t = xcorr2d(P, reference_window, interp_start, resolution=interp_resolution, threshold=interp_threshold, torsion_mode='interp')
+        data['torsion'].append(t)
+
+        if verborose:
+            print('Elapsed Time: {}s'.format(round(time.time() - start_time,2)), sep=' ', end='\r', flush=True)
+
+    if verborose:
+        print('Duration:', time.time() - start_time)
+
+    # Save results
+    obj = Data('_'.join((method, mode)), file_path)
+    obj.set(data['torsion'], start_frame, metadata)
+    obj.save()
+
+    if verborose:
+        print('Saving {} {} results.'.format(method, mode))

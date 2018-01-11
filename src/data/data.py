@@ -13,15 +13,45 @@ class Data():
     def __init__(self, name, path=None):
         """
         Initialize Data object.
+
+        Parameters
+        -----------------------------------
+        name : String
+            Name of data object. Used to as the filename when saving the data.
+        path : String
+            Path of desired directory where the data should be saved.
         """
         self.name = name
         self.file_name = str(self.name) + '.csv'
-        self.path = os.path.abspath(path)
         self.metadata = None
         self.start_frame = None
         self.torsion = None
+        self.pupil_center_col = None
+        self.pupil_center_row = None
+        self.pupil_radius = None
 
-    def set(self, torsion, start_frame=0, metadata=None, frame_index_list=None):
+        # If save path is not specified, set it to the current directory
+        if path is not None:
+            self.path = os.path.abspath(path)
+        else:
+            self.path = os.path.curdir
+
+    def set(self, torsion, pupil_center_col, pupil_center_row, pupil_radius, start_frame=0, metadata=None, frame_index_list=None):
+        """
+        Populate data fields with values.
+
+        Parameters
+        -------------------------------------
+        torsion : list
+            List of ocular torsion values.
+        start_frame : int
+            Video frame index corresponding to the start point of torsion analysis.
+        metadata : dict
+            Any video/torsion metadata the user wishes to store.
+        frame_index_list : list
+            List of same length as torsion. Maps torsion values to corresponding video frame indeces.
+            Specified when the video frames analyzed are not just subsequent frames.
+        """
         self.metadata = metadata
         self.start_frame = start_frame
         self.torsion = torsion
@@ -29,7 +59,7 @@ class Data():
 
     def save(self):
         """
-        Save data at path specified by save_str.
+        Save data at data object path.
 
         Parameters
         -------------------------------------
@@ -91,23 +121,10 @@ class Data():
                         time = 1/fps * self.frame_index_list[i]
                     csvwriter.writerow([self.frame_index_list[i], time, repr(deg)])
 
-        # # Save file using specified save file mode
-        # if mode == 'csv':
-        #
-        #
-        # elif mode == 'pickle':
-        #     file_suffix = '.pkl'
-        #     save_str = os.path.join(save_loc, file_name + file_suffix)
-        #     with open(save_str, 'wb') as output:
-        #         pickle.dump(self, output, pickle.HIGHEST_PROTOCOL)
-
-        # else:
-        #     # TODO throw exception
-        #     print('Save file mode not supported')
-        #     return None
-
     def load(self):
-
+        """
+        Load data saved in .csv file saved at path specified in self.path.
+        """
         torsion = []
         start_frame = 0
         metadata = {}
@@ -144,29 +161,6 @@ class Data():
 
             # set object from file
             self.set(torsion, start_frame, metadata)
-
-    # def plot_torsion(self):
-    #     """
-    #     Create a plot of the measured torsion in a video as a function of time.
-    #     """
-    #     torsion = []
-    #     time = []
-    #
-    #     for idx, frame_idx in enumerate(self.frame_index_list):
-    #         torsion.append(self.torsion[frame_idx])
-    #         time.append(self.frame_time[frame_idx])
-    #
-    #     fig = plt.figure()
-    #     plt.plot(time, torsion)
-    #     plt.grid('on')
-    #     plt.title('Ocular Torsion vs. Video Time')
-    #     plt.xlabel('Time [s]')
-    #     plt.ylabel('Torsion [deg]')
-    #     plt.show()
-    #
-    # # def read_chronos_data(self, data_str):
-    # #     with open(data_str, newline='') as csvfile:
-    # #         reader = csv.reader(csvfile, delimiter='\t')
 
 def load(file_str):
     """
