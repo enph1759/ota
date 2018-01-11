@@ -13,7 +13,6 @@ import time
 from plotly.offline import plot
 import plotly.graph_objs as go
 
-import pickle
 
 from src.gui import coord_click as clk
 from src.gui import frame_scroll as scroll
@@ -65,7 +64,7 @@ class OcularTorsionApplication(tk.Tk):
         self.save_path = tk.StringVar()
 
         self.pupil_list = None
-        #self.data = dat.Data(name='test')
+        self.data = []
 
         self.torsion = []
 
@@ -143,11 +142,22 @@ class OcularTorsionApplication(tk.Tk):
             # Construct metadata
             metadata = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s, Radial Thickness (pix): %(radial_thickness)d, Video Path: %(video_path)s, Video FPS: %(video_fps)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status, "radial_thickness": measure_state.radial_thickness.get(), "video_path": self.video_path.get(),"video_fps": self.video.fps}
+            metadata_dict = {'Mode': torsion_mode,
+                             'Iris': transform_mode,
+                             'Replace': replace_status,
+                             'Thickness': measure_state.radial_thickness.get(),
+                             'Video': self.video_path.get(),
+                             'FPS': self.video.fps}
             # Construct legend entry, which is a subset of the metadata
             legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status}
             # Append torsion to the list as a tuple with the first element the results, second element as the metadata, third element as the legend entry
             self.torsion.append((torsion, metadata, legend_entry))
+
+            # Initialize data object and append it to session list
+            data = dat.Data(name=legend_entry,path=self.save_path.get())
+            data.set(torsion = torsion, metadata = metadata_dict, start_frame = self.start_frame.get())
+            self.data.append(data)
 
 
         # Determine if the user wants to run 2D correlation on a subset of the iris
@@ -162,11 +172,24 @@ class OcularTorsionApplication(tk.Tk):
                 # Construct metadata
                 metadata = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, Window Theta (deg): %(window_theta)d, Segment Theta (deg): %(segment_theta)d, Radial Thickness (pix): %(radial_thickness)d, Feature Number: %(feature_num)d, Video Path: %(video_path)s, Video FPS: %(video_fps)d' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode,"window_theta": measure_state.window_theta.get(),"segment_theta": measure_state.segment_theta.get(),"radial_thickness": measure_state.radial_thickness.get(),"feature_num": (i+1),"video_path": self.video_path.get(),"video_fps": self.video.fps}
+                metadata_dict = {'Mode': torsion_mode,
+                                 'Iris': transform_mode,
+                                 'Window(deg)': measure_state.window_theta.get(),
+                                 'Segment(deg)': measure_state.segment_theta.get(),
+                                 'Feature Number': (i+1),
+                                 'Thickness': measure_state.radial_thickness.get(),
+                                 'Video': self.video_path.get(),
+                                 'FPS': self.video.fps}
                 # Construct legend entry, which is a subset of the metadata
                 legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, Feature Number: %(feature_num)d' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "feature_num": (i+1)}
                 # Append torsion to the list as a tuple with the first element the results, second element as the metadata, third element as the legend entry
-                self.torsion.append((torsion_i, metadata, legend_entry))
+                self.torsion.append((torsion_i, metadata_dict, legend_entry))
+
+                # Initialize data object and append it to session list
+                data = dat.Data(name=legend_entry,path=self.save_path.get())
+                data.set(torsion = torsion_i, metadata = metadata_dict, start_frame = self.start_frame.get())
+                self.data.append(data)
 
 
     def show_frame(self, cont):
@@ -197,16 +220,16 @@ class OcularTorsionApplication(tk.Tk):
         save_path = askdirectory(title="Select A Folder")
         self.save_path.set(save_path)
 
-    #TODO Update
-    def save_results(self, data):
+    def save_results(self):
         '''
         Save the output of the torsion results to a CSV
 
         Inputs:
             data - data object storing the torsion results
         '''
-        if self.save_path:
-            self.data.save_data('torsion_results', self.save_path.get(), mode='csv')
+        if self.data:
+            for data in self.data:
+                data.save()
 
     def scroll_frames(self):
         '''
@@ -299,6 +322,9 @@ class StartPage(tk.Frame):
 
         save_path_button = tk.Button(self, text="Set Results Save Path", command=lambda: controller.set_save_path())
         save_path_button.grid(row=3,column=0,sticky=tk.W)
+
+        save_path_label = tk.Label(self, textvariable=controller.save_path)
+        save_path_label.grid(row=3,column=1,columnspan=2, sticky=tk.W)
 
         start_frame_label = tk.Label(self, text="Start Frame Number:")
         start_frame_label.grid(row=4, column=0,sticky=tk.W)
@@ -512,10 +538,6 @@ class MeasureTorsion(tk.Frame):
         self.remove_features_button = tk.Button(self, text="Clear Clicked Values", command=lambda: self.clear_coordinates())
         self.remove_features_button.grid(row=11,column=2, sticky=tk.W)
 
-
-        save_path_label = tk.Label(self, textvariable=controller.save_path)
-        save_path_label.grid(row=3,column=1,columnspan=2, sticky=tk.W)
-
         measurement_options_label = tk.Label(self, text="Run and Save", font=LARGE_FONT)
         measurement_options_label.grid(row=13,column=0, sticky=tk.W)
 
@@ -523,8 +545,8 @@ class MeasureTorsion(tk.Frame):
         self.run_button = tk.Button(self, text="Run", command=lambda: controller.run(self))
         self.run_button.grid(row=14,column=0,  sticky=tk.W)
 
-        # self.save_button = tk.Button(self, text='Save to CSV', command=lambda: controller.save(self))
-        # self.save_button.grid(row=14,column=1, sticky=tk.W)
+        self.save_button = tk.Button(self, text='Save to CSV', command=lambda: controller.save_results())
+        self.save_button.grid(row=14,column=1, sticky=tk.W)
 
         measurement_options_label = tk.Label(self, text="Animate and Plot", font=LARGE_FONT)
         measurement_options_label.grid(row=15,column=0, sticky=tk.W)
