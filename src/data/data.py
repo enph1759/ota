@@ -26,9 +26,6 @@ class Data():
         self.metadata = None
         self.start_frame = None
         self.torsion = None
-        self.pupil_center_col = None
-        self.pupil_center_row = None
-        self.pupil_radius = None
 
         # If save path is not specified, set it to the current directory
         if path is not None:
@@ -36,7 +33,7 @@ class Data():
         else:
             self.path = os.path.curdir
 
-    def set(self, torsion, pupil_center_col, pupil_center_row, pupil_radius, start_frame=0, metadata=None, frame_index_list=None):
+    def set(self, torsion, start_frame=0, metadata=None, frame_index_list=None):
         """
         Populate data fields with values.
 
