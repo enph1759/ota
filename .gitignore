@@ -1,0 +1,19 @@
+# remove any unnecessary files
+.DS_Store
+.vscode
+
+*.pyc
+__pycache__
+notebooks/.ipynb_checkpoints
+.ipynb_checkpoints
+*.cprof
+
+# hide videos file
+videos
+saved_data
+
+# hide user settings
+settings.py
+
+# hide files folder for pickled objects
+files
