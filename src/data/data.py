@@ -186,7 +186,7 @@ class Data():
 
                         frame_index_list.append(int(line[0]))
                         torsion.append(float(line[2]))
-                        if line[3] == '' and line[4] == '' and line[5] == ''
+                        if line[3] == '' and line[4] == '' and line[5] == '':
                             pupil_list.append(None)
                         else:
                             temp_pupil = p.Pupil(None, None, skip_init=True)
