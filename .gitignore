@@ -15,5 +15,8 @@ saved_data
 # hide user settings
 settings.py
 
+# hide results file
+results
+
 # hide files folder for pickled objects
 files
