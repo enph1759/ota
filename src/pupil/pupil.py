@@ -15,7 +15,7 @@ class Pupil:
     Object to represent a pupil within a specific frame of the video.
     """
 
-    def __init__(self, frame, threshold=10):
+    def __init__(self, frame, threshold=10, skip_init=False):
         """
         Initialize pupil object and find it's center, and radius within frame
 
@@ -40,8 +40,13 @@ class Pupil:
                 1-index of point corresponds to row index
         """
 
-        self.center_col, self.center_row, self.radius, self.contour = self.calc_pupil_properties_fit_ellipse(frame, threshold=threshold)
-
+        if skip_init is False:
+            self.center_col, self.center_row, self.radius, self.contour = self.calc_pupil_properties_fit_ellipse(frame, threshold=threshold)
+        else:
+            self.center_col = None
+            self.center_row = None
+            self.radius = None
+            self.contour = None
 
     def calc_pupil_properties_fit_ellipse(self, frame, threshold=10):
         """

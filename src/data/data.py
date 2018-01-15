@@ -7,6 +7,7 @@ import numpy as np
 import csv
 import pdb
 import settings
+import src.pupil as p
 
 class Data():
 
@@ -26,6 +27,7 @@ class Data():
         self.metadata = None
         self.start_frame = None
         self.torsion = None
+        self.pupil_list = None
 
         # If save path is not specified, set it to the current directory
         if path is not None:
@@ -33,7 +35,7 @@ class Data():
         else:
             self.path = os.path.curdir
 
-    def set(self, torsion, start_frame=0, metadata=None, frame_index_list=None):
+    def set(self, torsion, start_frame=0, pupil_list=None, metadata=None, frame_index_list=None):
         """
         Populate data fields with values.
 
@@ -53,6 +55,7 @@ class Data():
         self.start_frame = start_frame
         self.torsion = torsion
         self.frame_index_list = frame_index_list
+        self.pupil_list = pupil_list
 
     def save(self):
         """
@@ -102,27 +105,54 @@ class Data():
                 fps = self.metadata.get('VIDEO_FPS', None)
 
             csvwriter.writerow(['TORSION RESULTS'])
-            csvwriter.writerow(['Frame Index', 'Frame Time', 'Torsion [deg]'])
+            csvwriter.writerow(['Frame Index',
+                                'Frame Time',
+                                'Torsion [deg]',
+                                'Pupil Center Column',
+                                'Pupil Center Row',
+                                'Pupil Radius [pixels]'])
 
             # default time is empty string
             time = ''
 
             # save to csv
             for i, deg in enumerate(self.torsion):
+                # Check if a specific frame index list exists or not
                 if self.frame_index_list is None:
                     if fps:
                         time = 1/fps * (self.start_frame + i)
-                    csvwriter.writerow([self.start_frame + i, time, repr(deg)])
+                        frame = self.start_frame + i
                 else:
                     if fps:
                         time = 1/fps * self.frame_index_list[i]
-                    csvwriter.writerow([self.frame_index_list[i], time, repr(deg)])
+                        frame = self.frame_index_list[i]
+
+                # Check to see if a pupil list exists
+                if self.pupil_list is None:
+                    pupil_center_col = ''
+                    pupil_center_row = ''
+                    pupil_radius = ''
+                else:
+                    temp_pupil = self.pupil_list[i]
+                    pupil_center_col = temp_pupil.center_col
+                    pupil_center_row = temp_pupil.center_row
+                    pupil_radius = temp_pupil.radius
+
+                # Write the results
+                csvwriter.writerow([frame,
+                                    time,
+                                    repr(deg),
+                                    pupil_center_col,
+                                    pupil_center_row,
+                                    pupil_radius])
 
     def load(self):
         """
         Load data saved in .csv file saved at path specified in self.path.
         """
         torsion = []
+        pupil_list = []
+        frame_index_list = []
         start_frame = 0
         metadata = {}
 
@@ -152,12 +182,21 @@ class Data():
                         if i == 0:
                             start_frame = int(line[0])
 
+                        frame_index_list.append(int(line[0]))
                         torsion.append(float(line[2]))
+                        if line[3] == '' and line[4] == '' and line[5] == ''
+                            pupil_list.append(None)
+                        else:
+                            temp_pupil = p.Pupil(None, None, skip_init=True)
+                            temp_pupil.center_col = float(line[3])
+                            temp_pupil.center_row = float(line[4])
+                            temp_pupil.radius = float(line[5])
+                            pupil_list.append(temp_pupil)
 
                         i += 1
 
             # set object from file
-            self.set(torsion, start_frame, metadata)
+            self.set(torsion, start_frame=start_frame, pupil_list=pupil_list, metadata=metadata, frame_index_list=frame_index_list)
 
 def load(file_str):
     """
@@ -168,47 +207,27 @@ def load(file_str):
     -------------------------------------
     file_str : String
         String pointing to file name to be loaded.
-        e.g. "saved_data1"
+        e.g. "D:\data\saved_data1.csv"
 
     Returns
     -------------------------------------
     data : Data object
         Data object stored in file being loaded
     """
+    
+    if os.path.isfile(file_str):
+        name = os.path.basename(file_str)
+        path = os.path.dirname(file_str)
 
-    # Check to make sure the string entered is valid
-    if os.path.exists(file_str) and (file_str[-4:] == '.csv' or file_str[-4:] == '.pkl'):
+        # Initialize empty data object
+        d = Data(name, path=path)
 
-        # If the file is a csv
-        if file_str[-4:] == '.csv':
-            # Initialize data object
-            d = Data()
-            d.frame_time = {}
-            d.torsion = {}
-            num_non_data_rows = 1
+        # Load the data
+        d.load()
 
-            with open(file_str, newline='') as csvfile:
-                # Calculate how much data is being loaded
-                row_count = sum(1 for row in csvfile)
-                num_data_elements = row_count - num_non_data_rows
-                d.frame_index_list = np.zeros(num_data_elements)
+        # return data object
+        return d
 
-            with open(file_str, newline='') as csvfile:
-                # Read the data
-                csvreader = csv.reader(csvfile, delimiter=',')
-                for idx, row in enumerate(csvreader):
-                    if not idx==0:
-                        frame_idx = int(row[0])
-                        d.frame_index_list[idx-num_non_data_rows] = frame_idx
-                        d.frame_time[frame_idx] = 2
-                        d.frame_time[frame_idx] = float(row[1])
-                        d.torsion[frame_idx] = float(row[2])
-
-            return d
-
-        # If the file is a pickled python object
-        elif file_str[-4:] == '.pkl':
-            print(os.path.abspath(file_str))
-            return pickle.load( open( file_str, "rb" ) )
     else:
-        print('Please enter a valid file path string.')
+        print('Please enter a valid file string.')
+        return None
