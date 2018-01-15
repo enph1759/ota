@@ -45,6 +45,8 @@ class Data():
             List of ocular torsion values.
         start_frame : int
             Video frame index corresponding to the start point of torsion analysis.
+        pupil_list : list
+            List of pupil objects.
         metadata : dict
             Any video/torsion metadata the user wishes to store.
         frame_index_list : list
