@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import csv
 import pdb
-import settings
+#import settings
 
 class Data():
 
