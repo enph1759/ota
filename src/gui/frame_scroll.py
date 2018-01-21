@@ -209,7 +209,6 @@ class WindowTracker(FrameTracker):
             self.angle = self.offset_first_frame[self.ind]
             radius = self.video.height/2
             self.window = Wedge((self.pupil_at_ind.center_col,self.pupil_at_ind.center_row),self.pupil_at_ind.radius+self.WINDOW_RADIUS,-(self.theta_window[1]+self.angle),-(self.theta_window[0]+self.angle),self.WINDOW_RADIUS,fill=False,ec=[1,0,0])
-
             self.window_patch = self.ax.add_patch(self.window)
 
         self.im.set_data(self.video[self.ind])

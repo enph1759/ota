@@ -14,7 +14,7 @@ from src.pupil.pupil import Pupil
 Main functions go here
 '''
 
-# torsion_application.run()
+torsion_application.run()
 
 
 def transform(segment, resolution, window_height, mode='', **kw):

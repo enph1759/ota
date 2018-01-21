@@ -216,7 +216,7 @@ def load(file_str):
     data : Data object
         Data object stored in file being loaded
     """
-    
+
     if os.path.isfile(file_str):
         name = os.path.basename(file_str)
         path = os.path.dirname(file_str)

@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory, asksaveasfile
 import matplotlib
 matplotlib.use("TkAgg")
+import numpy as np
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
@@ -64,6 +65,7 @@ class OcularTorsionApplication(tk.Tk):
         self.save_path = tk.StringVar()
 
         self.pupil_list = None
+        self.pupil_threshold = tk.IntVar()
         self.data = []
 
         self.torsion = []
@@ -80,31 +82,6 @@ class OcularTorsionApplication(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)
-
-    def get_main_state(self):
-        '''
-        Returns the state of torsion application
-        '''
-        state = {}
-        state['video_path'] = self.video_path.get()
-        state['start_frame'] = self.start_frame.get()
-        state['end_frame'] = self.end_frame.get()
-        state['save_path'] = self.save_path.get()
-        state['pupil_list'] = self.pupil_list.copy()
-        return state.copy()
-
-    def set_main_state(self, state):
-        '''
-        Sets the state of the torsion application
-
-        Inputs:
-            State: Dictionary of state values
-        '''
-        self.video_path.set(state['video_path'])
-        self.start_frame.set(state['start_frame'])
-        self.end_frame.set(state['end_frame'])
-        self.save_path.set(state['save_path'])
-        self.pupil_list = state['pupil_list']
 
     def run(self, measure_state):
         '''
@@ -147,7 +124,7 @@ class OcularTorsionApplication(tk.Tk):
                              'Replace': replace_status,
                              'Thickness': measure_state.radial_thickness.get(),
                              'Video': self.video_path.get(),
-                             'FPS': self.video.fps}
+                             'VIDEO_FPS': self.video.fps}
             # Construct legend entry, which is a subset of the metadata
             legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status}
@@ -156,7 +133,8 @@ class OcularTorsionApplication(tk.Tk):
 
             # Initialize data object and append it to session list
             data = dat.Data(name=legend_entry,path=self.save_path.get())
-            data.set(torsion = torsion, metadata = metadata_dict, start_frame = self.start_frame.get())
+            torsion_data = [torsion_data[1] for torsion_data in torsion_i.items()]
+            data.set(torsion = torsion_data, start_frame = self.start_frame.get(), pupil_list = self.pupil_list, metadata = metadata_dict)
             self.data.append(data)
 
 
@@ -179,7 +157,7 @@ class OcularTorsionApplication(tk.Tk):
                                  'Feature Number': (i+1),
                                  'Thickness': measure_state.radial_thickness.get(),
                                  'Video': self.video_path.get(),
-                                 'FPS': self.video.fps}
+                                 'VIDEO_FPS': self.video.fps}
                 # Construct legend entry, which is a subset of the metadata
                 legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, Feature Number: %(feature_num)d' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "feature_num": (i+1)}
@@ -188,7 +166,8 @@ class OcularTorsionApplication(tk.Tk):
 
                 # Initialize data object and append it to session list
                 data = dat.Data(name=legend_entry,path=self.save_path.get())
-                data.set(torsion = torsion_i, metadata = metadata_dict, start_frame = self.start_frame.get())
+                torsion_data = [torsion_data[1] for torsion_data in torsion_i.items()]
+                data.set(torsion = torsion_data, start_frame = self.start_frame.get(), pupil_list = self.pupil_list, metadata = metadata_dict)
                 self.data.append(data)
 
 
@@ -211,7 +190,7 @@ class OcularTorsionApplication(tk.Tk):
         if video_path:
             self.video_path.set(video_path)
             self.video = vid.Video(self.video_path.get())
-            self.end_frame.set(len(self.video) - 1)
+            self.end_frame.set(len(self.video))
 
     def set_save_path(self):
         '''
@@ -288,8 +267,7 @@ class OcularTorsionApplication(tk.Tk):
         '''
         Constructs a list of pupils.
         '''
-        self.pupil_list = pl.construct_pupil_list(self.video, self.start_frame.get(), self.end_frame.get())
-        measure_torsion_button.config(state = 'normal')
+        self.pupil_list = pl.construct_pupil_list(self.video, self.start_frame.get(), self.end_frame.get(), self.pupil_threshold.get())
 
 
 class StartPage(tk.Frame):
@@ -308,10 +286,9 @@ class StartPage(tk.Frame):
         title_label.grid(row=0,column=0,columnspan=3)
 
         self.measure_torsion_button = tk.Button(self, text="Measure Torsion", command=lambda: controller.show_frame(MeasureTorsion))
-        self.measure_torsion_button.config(state='disabled')
-        self.measure_torsion_button.grid(row=6,column=2,sticky=tk.W)
+        self.measure_torsion_button.grid(row=7,column=2,sticky=tk.W)
 
-        vid_button = tk.Button(self, text="Set Video Path", command=lambda: [self.measure_torsion_button.config(state='disabled'), controller.set_video_path()])
+        vid_button = tk.Button(self, text="Set Video Path", command=lambda:  controller.set_video_path())
         vid_button.grid(row=1,column=0,sticky=tk.W)
 
         video_path_label = tk.Label(self, textvariable=controller.video_path)
@@ -338,11 +315,18 @@ class StartPage(tk.Frame):
         end_frame_entry = tk.Entry(self, textvariable = controller.end_frame)
         end_frame_entry.grid(row=5, column=1)
 
+        pupil_threshold_label = tk.Label(self, text="Pupil Detection Threshold:")
+        pupil_threshold_label.grid(row=6, column=0)
+
+        pupil_threshold_entry = tk.Entry(self, textvariable = controller.pupil_threshold)
+        pupil_threshold_entry.grid(row=6, column=1)
+
         pupil_loc_button = tk.Button(self, text="Construct Pupil List", command=lambda: controller.construct_pupil_list(self.measure_torsion_button))
-        pupil_loc_button.grid(row=6,column=0,sticky=tk.W)
+        pupil_loc_button.grid(row=7,column=0,sticky=tk.W)
 
         pupil_scroll_button = tk.Button(self, text="Preview Pupil Locations", command=lambda: controller.scroll_pupil())
-        pupil_scroll_button.grid(row=6,column=1)
+        pupil_scroll_button.grid(row=7,column=1)
+
 
 class MeasureTorsion(tk.Frame):
     '''

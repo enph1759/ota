@@ -3,7 +3,7 @@ from src.pupil import pupil
 from src.iris import iris
 from src.data import data as dat
 
-def construct_pupil_list(video, first_frame, last_frame):
+def construct_pupil_list(video, first_frame, last_frame, threshold=10):
     '''
     Construct a dictionary of pupil objects for a series of vide frames.
 
@@ -18,12 +18,12 @@ def construct_pupil_list(video, first_frame, last_frame):
 
     pupil_list = {}
 
-    for i,frame in enumerate(video[first_frame:last_frame]):
+    for i,frame in enumerate(video[first_frame:last_frame+1]):
         frame_loc = i + first_frame
         try:
-            pupil_i = pupil.Pupil(frame)
+            pupil_i = pupil.Pupil(frame, threshold)
         except pupil.EmptyAreas:
-            print('Pupil not found in frame: %d \n None type object used inplace' % frame_index_list[idx])
+            print('Pupil not found in frame: %d \n None type object used inplace' % frame_loc)
             pupil_list[frame_loc] = None
         else:
             pupil_list[frame_loc] = pupil_i
