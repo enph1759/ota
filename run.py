@@ -184,9 +184,7 @@ def interpolation_subset_method(video_path, verborose=True, **kw):
 
     # Create dict to temporarily hold important data
     data = {
-        'p_center_row' : [],
-        'p_center_col' : [],
-        'p_radius' : [],
+        'pupil_list' : [],
         'torsion' : [],
     }
 
@@ -212,9 +210,7 @@ def interpolation_subset_method(video_path, verborose=True, **kw):
 
     # Find first frame pupil and populate data lists
     pup = Pupil(first_frame, threshold=pupil_threshold)
-    data['p_center_col'].append(pup.center_col)
-    data['p_center_row'].append(pup.center_row)
-    data['p_radius'].append(pup.radius)
+    data['pupil_list'].append(pup)
     data['torsion'].append(0)
 
     # Create the reference window from the first frame
@@ -232,9 +228,7 @@ def interpolation_subset_method(video_path, verborose=True, **kw):
 
         # find pupil in frame
         pup = Pupil(I, threshold=pupil_threshold)
-        data['p_center_col'].append(pup.center_col)
-        data['p_center_row'].append(pup.center_row)
-        data['p_radius'].append(pup.radius)
+        data['pupil_list'].append(pup)
 
         # Extract the iris segment
         P = iris_transform(I, pup, window_height, theta_resolution=transform_resolution)
@@ -251,7 +245,7 @@ def interpolation_subset_method(video_path, verborose=True, **kw):
 
     # Save results
     obj = Data('_subset_interpolation', file_path)
-    obj.set(data['torsion'], start_frame, metadata)
+    obj.set(data['torsion'], start_frame=start_frame, pupil_list=data['pupil_list'], metadata=metadata)
     obj.save()
 
     if verborose:
