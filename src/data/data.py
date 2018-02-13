@@ -135,7 +135,7 @@ class Data():
                     pupil_center_row = ''
                     pupil_radius = ''
                 else:
-                    temp_pupil = self.pupil_list[i]
+                    temp_pupil = self.pupil_list[i+self.start_frame]
                     pupil_center_col = temp_pupil.center_col
                     pupil_center_row = temp_pupil.center_row
                     pupil_radius = temp_pupil.radius
