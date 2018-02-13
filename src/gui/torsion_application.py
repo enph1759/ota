@@ -133,7 +133,7 @@ class OcularTorsionApplication(tk.Tk):
 
             # Initialize data object and append it to session list
             data = dat.Data(name=legend_entry,path=self.save_path.get())
-            torsion_data = [torsion_data[1] for torsion_data in torsion_i.items()]
+            torsion_data = [torsion_data[1] for torsion_data in torsion.items()]
             data.set(torsion = torsion_data, start_frame = self.start_frame.get(), pupil_list = self.pupil_list, metadata = metadata_dict)
             self.data.append(data)
 
