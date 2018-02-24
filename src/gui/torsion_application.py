@@ -61,6 +61,7 @@ class OcularTorsionApplication(tk.Tk):
 
         self.start_frame = tk.IntVar()
         self.end_frame = tk.IntVar()
+        self.reference_frame = tk.IntVar()
 
         self.save_path = tk.StringVar()
 
@@ -115,7 +116,7 @@ class OcularTorsionApplication(tk.Tk):
         if measure_state.Fulliris.get():
             # Set the transform mode and quantify torsion
             transform_mode = 'full'
-            torsion = tq2dx.quantify_torsion(RADIUS, RESOLUTION, torsion_mode, transform_mode, self.video, self.start_frame.get(), self.end_frame.get(), self.pupil_list, upper_iris = upper_iris, lower_iris = lower_iris)
+            torsion = tq2dx.quantify_torsion(RADIUS, RESOLUTION, torsion_mode, transform_mode, self.video, self.start_frame.get(), self.reference_frame.get(), self.end_frame.get(), self.pupil_list, self.pupil_threshold.get(), upper_iris = upper_iris, lower_iris = lower_iris)
             # Construct metadata
             metadata = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s, Radial Thickness (pix): %(radial_thickness)d, Video Path: %(video_path)s, Video FPS: %(video_fps)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status, "radial_thickness": measure_state.radial_thickness.get(), "video_path": self.video_path.get(),"video_fps": self.video.fps}
@@ -124,7 +125,8 @@ class OcularTorsionApplication(tk.Tk):
                              'Replace': replace_status,
                              'Thickness': measure_state.radial_thickness.get(),
                              'Video': self.video_path.get(),
-                             'VIDEO_FPS': self.video.fps}
+                             'VIDEO_FPS': self.video.fps,
+                             'REFERENCE_FRAME': self.reference_frame.get()}
             # Construct legend entry, which is a subset of the metadata
             legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status}
@@ -146,7 +148,7 @@ class OcularTorsionApplication(tk.Tk):
             feature_coordinates = measure_state.feature_coordinates
             # Run the algorithm for each set of recorded feature coordinates
             for i, coords in enumerate(feature_coordinates):
-                torsion_i = tq2dx.quantify_torsion(RADIUS, RESOLUTION, torsion_mode, transform_mode, self.video, self.start_frame.get(), self.end_frame.get(), self.pupil_list,WINDOW_THETA = measure_state.window_theta.get(), SEGMENT_THETA = measure_state.segment_theta.get(),feature_coords = coords)
+                torsion_i = tq2dx.quantify_torsion(RADIUS, RESOLUTION, torsion_mode, transform_mode, self.video, self.start_frame.get(), self.reference_frame.get(), self.end_frame.get(), self.pupil_list, self.pupil_threshold.get(), WINDOW_THETA = measure_state.window_theta.get(), SEGMENT_THETA = measure_state.segment_theta.get(),feature_coords = coords)
                 # Construct metadata
                 metadata = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, Window Theta (deg): %(window_theta)d, Segment Theta (deg): %(segment_theta)d, Radial Thickness (pix): %(radial_thickness)d, Feature Number: %(feature_num)d, Video Path: %(video_path)s, Video FPS: %(video_fps)d' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode,"window_theta": measure_state.window_theta.get(),"segment_theta": measure_state.segment_theta.get(),"radial_thickness": measure_state.radial_thickness.get(),"feature_num": (i+1),"video_path": self.video_path.get(),"video_fps": self.video.fps}
@@ -157,7 +159,8 @@ class OcularTorsionApplication(tk.Tk):
                                  'Feature Number': (i+1),
                                  'Thickness': measure_state.radial_thickness.get(),
                                  'Video': self.video_path.get(),
-                                 'VIDEO_FPS': self.video.fps}
+                                 'VIDEO_FPS': self.video.fps,
+                                 'REFERENCE_FRAME': self.reference_frame.get()}
                 # Construct legend entry, which is a subset of the metadata
                 legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, Feature Number: %(feature_num)d' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "feature_num": (i+1)}
@@ -286,7 +289,7 @@ class StartPage(tk.Frame):
         title_label.grid(row=0,column=0,columnspan=3)
 
         self.measure_torsion_button = tk.Button(self, text="Measure Torsion", command=lambda: controller.show_frame(MeasureTorsion))
-        self.measure_torsion_button.grid(row=7,column=2,sticky=tk.W)
+        self.measure_torsion_button.grid(row=8,column=2,sticky=tk.W)
 
         vid_button = tk.Button(self, text="Set Video Path", command=lambda:  controller.set_video_path())
         vid_button.grid(row=1,column=0,sticky=tk.W)
@@ -309,23 +312,29 @@ class StartPage(tk.Frame):
         start_frame_entry = tk.Entry(self, textvariable = controller.start_frame)
         start_frame_entry.grid(row=4, column=1)
 
+        reference_frame_label = tk.Label(self, text='Reference Frame Number:')
+        reference_frame_label.grid(row=5, column=0, sticky=tk.W)
+
+        reference_frame_entry = tk.Entry(self, textvariable = controller.reference_frame)
+        reference_frame_entry.grid(row=5, column=1)
+
         end_frame_label = tk.Label(self, text="End Frame Number:")
-        end_frame_label.grid(row=5, column=0,sticky=tk.W)
+        end_frame_label.grid(row=6, column=0,sticky=tk.W)
 
         end_frame_entry = tk.Entry(self, textvariable = controller.end_frame)
-        end_frame_entry.grid(row=5, column=1)
+        end_frame_entry.grid(row=6, column=1)
 
         pupil_threshold_label = tk.Label(self, text="Pupil Detection Threshold:")
-        pupil_threshold_label.grid(row=6, column=0)
+        pupil_threshold_label.grid(row=7, column=0)
 
         pupil_threshold_entry = tk.Entry(self, textvariable = controller.pupil_threshold)
-        pupil_threshold_entry.grid(row=6, column=1)
+        pupil_threshold_entry.grid(row=7, column=1)
 
         pupil_loc_button = tk.Button(self, text="Construct Pupil List", command=lambda: controller.construct_pupil_list(self.measure_torsion_button))
-        pupil_loc_button.grid(row=7,column=0,sticky=tk.W)
+        pupil_loc_button.grid(row=8,column=0,sticky=tk.W)
 
         pupil_scroll_button = tk.Button(self, text="Preview Pupil Locations", command=lambda: controller.scroll_pupil())
-        pupil_scroll_button.grid(row=7,column=1)
+        pupil_scroll_button.grid(row=8,column=1)
 
 
 class MeasureTorsion(tk.Frame):

@@ -2,10 +2,11 @@ from src.video import video as vid
 from src.pupil import pupil
 from src.iris import iris
 from src.data import data as dat
+from tqdm import tqdm
 
 def construct_pupil_list(video, first_frame, last_frame, threshold=10):
     '''
-    Construct a dictionary of pupil objects for a series of vide frames.
+    Construct a dictionary of pupil objects for a series of video frames.
 
     Inputs:
         video - video object
@@ -18,7 +19,7 @@ def construct_pupil_list(video, first_frame, last_frame, threshold=10):
 
     pupil_list = {}
 
-    for i,frame in enumerate(video[first_frame:last_frame+1]):
+    for i,frame in tqdm(enumerate(video[first_frame:last_frame+1])):
         frame_loc = i + first_frame
         try:
             pupil_i = pupil.Pupil(frame, threshold)

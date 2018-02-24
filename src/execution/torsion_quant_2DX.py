@@ -6,6 +6,7 @@ from src.torsion import xcorr2d
 from src.pupil import pupil
 from src.iris import iris, eyelid_removal
 from src import presets as pre
+from tqdm import tqdm
 
 def quantify_torsion(
     WINDOW_RADIUS,
@@ -14,8 +15,10 @@ def quantify_torsion(
     transform_mode,
     video,
     start_frame,
+    reference_frame,
     end_frame,
     pupil_list,
+    threshold,
     WINDOW_THETA = None,
     SEGMENT_THETA = None,
     upper_iris = None,
@@ -116,7 +119,11 @@ def quantify_torsion(
 
     # get the reference window from the first frame of the video
     # this will be the base for all torsion ie. all rotation is relative to this window
-    first_window = iris.iris_transform(video[start_frame], pupil_list[start_frame], WINDOW_RADIUS, theta_resolution = upsample_factor, theta_window = reference_bounds)
+    if start_frame == reference_frame:
+        first_window = iris.iris_transform(video[start_frame], pupil_list[start_frame], WINDOW_RADIUS, theta_resolution = upsample_factor, theta_window = reference_bounds)
+    else:
+        ref_pupil = pupil.Pupil(video[reference_frame], threshold)
+        first_window = iris.iris_transform(video[reference_frame], ref_pupil, WINDOW_RADIUS, theta_resolution = upsample_factor, theta_window = reference_bounds)
 
     if noise_replace:
 
@@ -144,7 +151,7 @@ def quantify_torsion(
 
     torsion = {}
     # find torsion between start_frame+1:last_frame
-    for i, frame in enumerate(video[start_frame:end_frame]):
+    for i, frame in tqdm(enumerate(video[start_frame:end_frame])):
         frame_loc = i + start_frame
         # check if a pupil exists
         if not pupil_list[frame_loc]:
