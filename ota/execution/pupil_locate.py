@@ -1,7 +1,7 @@
-from src.video import video as vid
-from src.pupil import pupil
-from src.iris import iris
-from src.data import data as dat
+from ota.video import video as vid
+from ota.pupil import pupil
+from ota.iris import iris
+from ota.data import data as dat
 from tqdm import tqdm
 
 def construct_pupil_list(video, first_frame, last_frame, threshold=10):

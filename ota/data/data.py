@@ -7,7 +7,7 @@ import numpy as np
 import csv
 import pdb
 #import settings
-import src.pupil as p
+import ota.pupil as p
 
 class Data():
 

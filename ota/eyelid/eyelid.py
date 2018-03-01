@@ -6,12 +6,14 @@ import cv2
 import cProfile
 import numpy as np
 
-from src.video import video as vid
-from src.helpers import plotting as plot
-from src import presets
-from src.pupil import pupil
-from src.iris import iris
-import settings
+# import settings
+# from ota.helpers import plotting as plot
+
+from ota.video import video as vid
+from ota import presets
+from ota.pupil import pupil
+from ota.iris import iris
+
 
 from functools import reduce
 

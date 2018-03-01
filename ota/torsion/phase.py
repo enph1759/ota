@@ -19,10 +19,10 @@ def phase_correlation(fixed, moved, polar=True):
 
     shape = fixed.shape
 
-    src = np.fft.fft2(fixed)
+    source = np.fft.fft2(fixed)
     target = np.fft.fft2(moved)
 
-    product = src * target.conj()
+    product = source * target.conj()
 
     cross_correlation = np.fft.ifft2(product)
 

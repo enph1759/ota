@@ -1,11 +1,11 @@
 import numpy as np
 
-from src.video import video as vid
-from src import presets
-from src.torsion import xcorr2d
-from src.pupil import pupil
-from src.iris import iris, eyelid_removal
-from src import presets as pre
+from ota.video import video as vid
+from ota import presets
+from ota.torsion import xcorr2d
+from ota.pupil import pupil
+from ota.iris import iris, eyelid_removal
+from ota import presets as pre
 from tqdm import tqdm
 
 def quantify_torsion(
@@ -185,12 +185,12 @@ def quantify_torsion(
 # import cv2
 # import numpy as np
 #
-# from src import presets
-# from src.torsion import xcorr2d
-# from src.video import video as vid
-# from src.pupil import pupil
-# from src.iris import iris, eyelid_removal
-# from src.data import data as dat
+# from ota import presets
+# from ota.torsion import xcorr2d
+# from ota.video import video as vid
+# from ota.pupil import pupil
+# from ota.iris import iris, eyelid_removal
+# from ota.data import data as dat
 #
 # def quantify_torsion(gui, controller):
 #     # PRESETS

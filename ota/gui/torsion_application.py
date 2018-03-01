@@ -15,13 +15,13 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 
 
-from src.gui import coord_click as clk
-from src.gui import frame_scroll as scroll
-from src.video import video as vid
-from src.execution import pupil_locate as pl
-from src.execution import torsion_quant_2DX as tq2dx
-from src.data import data as dat
-from src.iris import iris, eyelid_removal
+from ota.gui import coord_click as clk
+from ota.gui import frame_scroll as scroll
+from ota.video import video as vid
+from ota.execution import pupil_locate as pl
+from ota.execution import torsion_quant_2DX as tq2dx
+from ota.data import data as dat
+from ota.iris import iris, eyelid_removal
 
 
 LARGE_FONT= ("Verdana", 18)
