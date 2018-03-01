@@ -19,6 +19,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   includeme
    quickstart
    tutorial
    modules/ota.torsion
