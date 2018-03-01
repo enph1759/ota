@@ -128,7 +128,7 @@ class OcularTorsionApplication(tk.Tk):
                              'VIDEO_FPS': self.video.fps,
                              'REFERENCE_FRAME': self.reference_frame.get()}
             # Construct legend entry, which is a subset of the metadata
-            legend_entry = 'Mode: %(torsion_mode)s, Iris: %(transform_mode)s, %(replace_status)s' % \
+            legend_entry = 'Mode-%(torsion_mode)s_Iris-%(transform_mode)s_%(replace_status)s' % \
                             {"torsion_mode": torsion_mode, "transform_mode": transform_mode, "replace_status": replace_status}
             # Append torsion to the list as a tuple with the first element the results, second element as the metadata, third element as the legend entry
             self.torsion.append((torsion, metadata, legend_entry))
