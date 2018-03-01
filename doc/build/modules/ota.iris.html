@@ -1,0 +1,220 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ota.iris package &#8212; ota 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="ota-iris-package">
+<h1>ota.iris package<a class="headerlink" href="#ota-iris-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ota.iris.eyelid_removal">
+<span id="ota-iris-eyelid-removal-module"></span><h2>ota.iris.eyelid_removal module<a class="headerlink" href="#module-ota.iris.eyelid_removal" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ota.iris.eyelid_removal.iris_extension">
+<code class="descclassname">ota.iris.eyelid_removal.</code><code class="descname">iris_extension</code><span class="sig-paren">(</span><em>iris</em>, <em>theta_resolution</em>, <em>lower_theta=0</em>, <em>upper_theta=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/eyelid_removal.html#iris_extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.eyelid_removal.iris_extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extends the iris by inserting portions of the iris before zero at the beginning and appending
+portions of th iris after zero to the end.</p>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd>iris - numpy array of pixel intensities of transformed iris
+theta_resolution - double; degree of upsampling used in the transform along the theta axis
+lower_theta - int; degrees below zero that define the iris insertion bounds
+upper_theta - int; degrees above zero that define the iris extension bounds</dd>
+<dt>Outputs:</dt>
+<dd>iris - numpy array of pixel intensities that represents the extended iris</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ota.iris.eyelid_removal.noise_replace">
+<code class="descclassname">ota.iris.eyelid_removal.</code><code class="descname">noise_replace</code><span class="sig-paren">(</span><em>iris</em>, <em>upper_occlusion_theta</em>, <em>lower_occlusion_theta</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/eyelid_removal.html#noise_replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.eyelid_removal.noise_replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces portions of the iris with noise.</p>
+<dl class="docutils">
+<dt>Input:</dt>
+<dd><p class="first">iris - numpy array of pixel intensities of transformed iris.
+upper_occlusion_theta - tuple that defines the angular bounds of the upper iris</p>
+<blockquote>
+<div>that is to be replaced with noise.</div></blockquote>
+<dl class="last docutils">
+<dt>lower_occlustion_theta - tuple that defines the angular bounds of the lower iris</dt>
+<dd>that is to be replaced with noise.</dd>
+</dl>
+</dd>
+<dt>Output:</dt>
+<dd><dl class="first last docutils">
+<dt>iris - numpy array of pixel intensities of transformed iris with desired</dt>
+<dd>portions replaced with noise.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ota.iris.iris">
+<span id="ota-iris-iris-module"></span><h2>ota.iris.iris module<a class="headerlink" href="#module-ota.iris.iris" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ota.iris.iris.calculate_func_of_theta">
+<code class="descclassname">ota.iris.iris.</code><code class="descname">calculate_func_of_theta</code><span class="sig-paren">(</span><em>polar_image</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/iris.html#calculate_func_of_theta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.iris.calculate_func_of_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input: polar_image - A transformed (to polar coordinates) and masked image of the iris
+Output: f - A function that relates an angle theta to the sum of the intensity as the radius is varied for that fixed theta</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ota.iris.iris.get_cartesian_coord">
+<code class="descclassname">ota.iris.iris.</code><code class="descname">get_cartesian_coord</code><span class="sig-paren">(</span><em>radius</em>, <em>theta</em>, <em>pupil</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/iris.html#get_cartesian_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.iris.get_cartesian_coord" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Calculates the cartesian coordinates of the location specified by polar</dt>
+<dd>coordinate point (radius, theta). The origin of the polar coordinate frame is the center
+of the pupil.</dd>
+<dt>Inputs:</dt>
+<dd>radius - Distance of the location from the pupil center
+theta - The angular coordinate of the location in polar space
+pupil - A dictionary containing information regarding the pupil in the image</dd>
+<dt>Outputs:</dt>
+<dd><dl class="first last docutils">
+<dt>location - dictionatry containing the following:</dt>
+<dd>row - The row index of the location in cartesian image space
+col - The column index of the location in cartesian image space</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ota.iris.iris.get_polar_coord">
+<code class="descclassname">ota.iris.iris.</code><code class="descname">get_polar_coord</code><span class="sig-paren">(</span><em>r</em>, <em>c</em>, <em>pupil</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/iris.html#get_polar_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.iris.get_polar_coord" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Calculates the polar coordinates of the location specified by cartesian</dt>
+<dd>point (c,r). The origin of the polar coordinate frame is the center
+of the pupil.</dd>
+<dt>Inputs:</dt>
+<dd>c - Column index of the feature
+r - Row index of the feature
+pupil - A dictionary containing information regarding the pupil in the image</dd>
+<dt>Outputs:</dt>
+<dd>radius - The distance of the (c,r) location from the pupil center
+theta - The angular coordinate of the (c,r) location in polar space</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ota.iris.iris.iris_transform">
+<code class="descclassname">ota.iris.iris.</code><code class="descname">iris_transform</code><span class="sig-paren">(</span><em>frame</em>, <em>pupil</em>, <em>iris_thickness</em>, <em>theta_window=(-90</em>, <em>270)</em>, <em>theta_resolution=1</em>, <em>r_resolution=1</em>, <em>mode='polar'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ota/iris/iris.html#iris_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ota.iris.iris.iris_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the iris in the given frame into polar representation where the vertical
+axis is ‘r’ and horizontal axis is theta.</p>
+<p>Optionally returns iris segment in cartesian coordinates</p>
+<dl class="docutils">
+<dt>Inputs:</dt>
+<dd><p class="first">frame - opencv video frame (numpy array of intensities)
+pupil - a dictionary containing information about the pupil within the frame
+iris_thickness - pixel width of the iris
+theta_window - Range of theta values over which to sample the cartesian image
+theta_resolution - sampling interval for theta in degrees. Default is 1 degree.
+r_resolution - sampling interval for radius. Default is 1 pixel length
+ret_cartesian - boolean value which allows the return of only the iris in</p>
+<blockquote class="last">
+<div>cartesian coordinates. By default this is set to false</div></blockquote>
+</dd>
+<dt>Outputs:</dt>
+<dd>polar_iris - opencv image (numpy array) of extracted iris in polar coordinates
+cartesian_iris - opencv image (numpy array) of extracted iris in cartesian coordinates</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ota.iris">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ota.iris" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">ota.iris package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-ota.iris.eyelid_removal">ota.iris.eyelid_removal module</a></li>
+<li><a class="reference internal" href="#module-ota.iris.iris">ota.iris.iris module</a></li>
+<li><a class="reference internal" href="#module-ota.iris">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/ota.iris.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Bryden Fogelman, Cyrus Neary, Sam Reid.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/modules/ota.iris.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

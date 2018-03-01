@@ -1,0 +1,38 @@
+src.gui package
+===============
+
+Submodules
+----------
+
+src.gui.coord\_click module
+---------------------------
+
+.. automodule:: src.gui.coord_click
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.gui.frame\_scroll module
+----------------------------
+
+.. automodule:: src.gui.frame_scroll
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.gui.torsion\_application module
+-----------------------------------
+
+.. automodule:: src.gui.torsion_application
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.gui
+    :members:
+    :undoc-members:
+    :show-inheritance:

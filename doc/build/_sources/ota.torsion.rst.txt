@@ -1,0 +1,30 @@
+ota.torsion package
+===================
+
+manual module
+-------------------------
+
+.. automodule:: ota.torsion.manual
+    :members:
+    :undoc-members:
+
+phase module
+------------------------
+
+.. automodule:: ota.torsion.phase
+    :members:
+    :undoc-members:
+
+xcorr1d module
+--------------------------
+
+.. automodule:: ota.torsion.xcorr1d
+    :members:
+    :undoc-members:
+
+xcorr2d module
+--------------------------
+
+.. automodule:: ota.torsion.xcorr2d
+    :members:
+    :undoc-members:
