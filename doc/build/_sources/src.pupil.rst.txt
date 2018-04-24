@@ -1,0 +1,22 @@
+src.pupil package
+=================
+
+Submodules
+----------
+
+src.pupil.pupil module
+----------------------
+
+.. automodule:: src.pupil.pupil
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.pupil
+    :members:
+    :undoc-members:
+    :show-inheritance:

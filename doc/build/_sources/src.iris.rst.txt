@@ -1,0 +1,30 @@
+src.iris package
+================
+
+Submodules
+----------
+
+src.iris.eyelid\_removal module
+-------------------------------
+
+.. automodule:: src.iris.eyelid_removal
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.iris.iris module
+--------------------
+
+.. automodule:: src.iris.iris
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.iris
+    :members:
+    :undoc-members:
+    :show-inheritance:

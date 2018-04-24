@@ -1,0 +1,54 @@
+src.torsion package
+===================
+
+Submodules
+----------
+
+src.torsion.estimate\_torsion2D module
+--------------------------------------
+
+.. automodule:: src.torsion.estimate_torsion2D
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.torsion.manual module
+-------------------------
+
+.. automodule:: src.torsion.manual
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.torsion.phase module
+------------------------
+
+.. automodule:: src.torsion.phase
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.torsion.xcorr1d module
+--------------------------
+
+.. automodule:: src.torsion.xcorr1d
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.torsion.xcorr2d module
+--------------------------
+
+.. automodule:: src.torsion.xcorr2d
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.torsion
+    :members:
+    :undoc-members:
+    :show-inheritance:

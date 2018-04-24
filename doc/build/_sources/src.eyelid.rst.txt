@@ -1,0 +1,22 @@
+src.eyelid package
+==================
+
+Submodules
+----------
+
+src.eyelid.eyelid module
+------------------------
+
+.. automodule:: src.eyelid.eyelid
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.eyelid
+    :members:
+    :undoc-members:
+    :show-inheritance:

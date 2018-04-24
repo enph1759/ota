@@ -1,0 +1,30 @@
+src.execution package
+=====================
+
+Submodules
+----------
+
+src.execution.pupil\_locate module
+----------------------------------
+
+.. automodule:: src.execution.pupil_locate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+src.execution.torsion\_quant\_2DX module
+----------------------------------------
+
+.. automodule:: src.execution.torsion_quant_2DX
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src.execution
+    :members:
+    :undoc-members:
+    :show-inheritance:

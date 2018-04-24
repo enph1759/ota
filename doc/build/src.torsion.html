@@ -1,0 +1,394 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>src.torsion package &#8212; ota 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="src-torsion-package">
+<h1>src.torsion package<a class="headerlink" href="#src-torsion-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="src-torsion-estimate-torsion2d-module">
+<h2>src.torsion.estimate_torsion2D module<a class="headerlink" href="#src-torsion-estimate-torsion2d-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-src.torsion.manual">
+<span id="src-torsion-manual-module"></span><h2>src.torsion.manual module<a class="headerlink" href="#module-src.torsion.manual" title="Permalink to this headline">¶</a></h2>
+<p>Generate manually rotated frames for testing torsion quantification methods.</p>
+<dl class="function">
+<dt id="src.torsion.manual.make_rotations">
+<code class="descclassname">src.torsion.manual.</code><code class="descname">make_rotations</code><span class="sig-paren">(</span><em>image</em>, <em>max_angle</em>, <em>num_frames=None</em>, <em>resolution=1</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/manual.html#make_rotations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.manual.make_rotations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a list of manually equally rotated images up to a specified max angle.</p>
+<p>If transform function is provided, apply transform to rotated images. The only
+input to the transform function should be an image, for extra paramters use a
+lambda function.</p>
+<p>ex. transform = lambda x: some_transform(x, other_param=1)</p>
+<dl class="docutils">
+<dt>INPUT</dt>
+<dd><p class="first">image - NxM image as numpy array
+max_angle - Maximam rotation of first image
+num_frames - Specify the number of frames to make, by default the number of</p>
+<blockquote>
+<div>frames is max_angle / resolution</div></blockquote>
+<dl class="docutils">
+<dt>resolution - By default the rotated degree is a whole number, by decreasing</dt>
+<dd>the resolution you decrease the degree per change in frame</dd>
+</dl>
+<p class="last">transform -</p>
+</dd>
+<dt>OUTPUT</dt>
+<dd><dl class="first last docutils">
+<dt>frames - a list of rotated frames ranging from 0 degrees of rotation to</dt>
+<dd>max_angle degrees of rotation</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.torsion.phase">
+<span id="src-torsion-phase-module"></span><h2>src.torsion.phase module<a class="headerlink" href="#module-src.torsion.phase" title="Permalink to this headline">¶</a></h2>
+<p>Calculate the amount of torsion via phase correlation.</p>
+<dl class="function">
+<dt id="src.torsion.phase.phase_correlation">
+<code class="descclassname">src.torsion.phase.</code><code class="descname">phase_correlation</code><span class="sig-paren">(</span><em>fixed</em>, <em>moved</em>, <em>polar=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/phase.html#phase_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.phase.phase_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the translation of moved frame relative to the fixed frame using
+phase correlation.</p>
+<dl class="docutils">
+<dt>INPUTS</dt>
+<dd>fixed - Prior frame as NxM image
+moved - Moved frame relative to the fixed frame, also NxM image</dd>
+<dt>OUTPUTS</dt>
+<dd>shifts - Coordinates of relative shift</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.phase.scipy_phase_correlation">
+<code class="descclassname">src.torsion.phase.</code><code class="descname">scipy_phase_correlation</code><span class="sig-paren">(</span><em>fixed</em>, <em>moved</em>, <em>upsample_factor=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/phase.html#scipy_phase_correlation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.phase.scipy_phase_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the translation of moved frame relative to the fixed frame
+(using scipy package).</p>
+<p>Reference:
+# <a class="reference external" href="http://scikit-image.org/docs/dev/auto_examples/transform/plot_register_translation.html">http://scikit-image.org/docs/dev/auto_examples/transform/plot_register_translation.html</a>
+# <a class="reference external" href="http://scikit-image.org/docs/dev/api/skimage.feature.html#skimage.feature.register_translation">http://scikit-image.org/docs/dev/api/skimage.feature.html#skimage.feature.register_translation</a></p>
+<dl class="docutils">
+<dt>INPUTS</dt>
+<dd>fixed - Prior frame as NxM image
+moved - Moved frame relative to the fixed frame, also NxM image</dd>
+<dt>OUTPUTS</dt>
+<dd>shifts - Coordinates of relative shift</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.torsion.xcorr1d">
+<span id="src-torsion-xcorr1d-module"></span><h2>src.torsion.xcorr1d module<a class="headerlink" href="#module-src.torsion.xcorr1d" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="src.torsion.xcorr1d.DifferentSignalShapeError">
+<em class="property">exception </em><code class="descclassname">src.torsion.xcorr1d.</code><code class="descname">DifferentSignalShapeError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr1d.html#DifferentSignalShapeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr1d.DifferentSignalShapeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr1d.signal_offset">
+<code class="descclassname">src.torsion.xcorr1d.</code><code class="descname">signal_offset</code><span class="sig-paren">(</span><em>sig1</em>, <em>sig2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr1d.html#signal_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr1d.signal_offset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-src.torsion.xcorr2d">
+<span id="src-torsion-xcorr2d-module"></span><h2>src.torsion.xcorr2d module<a class="headerlink" href="#module-src.torsion.xcorr2d" title="Permalink to this headline">¶</a></h2>
+<p>Method to calculate the 2D cross correlation between two images.</p>
+<dl class="exception">
+<dt id="src.torsion.xcorr2d.CorrelationBelowThreshold">
+<em class="property">exception </em><code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">CorrelationBelowThreshold</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#CorrelationBelowThreshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.CorrelationBelowThreshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Correlation must be above a certain threshold.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="src.torsion.xcorr2d.InputParameterError">
+<em class="property">exception </em><code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">InputParameterError</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#InputParameterError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.InputParameterError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>General error for correlation methods with incorrect parameters.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="src.torsion.xcorr2d.LackingInterpPoints">
+<em class="property">exception </em><code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">LackingInterpPoints</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#LackingInterpPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.LackingInterpPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Need more then 3 points in order to interpolate.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="src.torsion.xcorr2d.LengthMismatch">
+<em class="property">exception </em><code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">LengthMismatch</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#LengthMismatch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.LengthMismatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Arrays must be the same length.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr2d.corr2_coeff">
+<code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">corr2_coeff</code><span class="sig-paren">(</span><em>a</em>, <em>b</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#corr2_coeff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.corr2_coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Caclulates the 2D correlation coefficient of two matrices. Raise an exception
+if a and b are not the same size.</p>
+<p>The coefficient is calculated using the following formula:
+<a class="reference external" href="https://www.mathworks.com/help/images/ref/corr2.html">https://www.mathworks.com/help/images/ref/corr2.html</a>.</p>
+<blockquote>
+<div>a : array_like, NxM
+b : array_like, NxM</div></blockquote>
+<blockquote>
+<div><dl class="docutils">
+<dt>coeff <span class="classifier-delimiter">:</span> <span class="classifier">float, 0 =&lt; x =&lt; 1</span></dt>
+<dd>2D correlation coefficient.</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr2d.corr_interp">
+<code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">corr_interp</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>start</em>, <em>interp_resolution</em>, <em>kind='quadratic'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#corr_interp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.corr_interp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolate a list of correlation values and return the amount of rotation
+on a finer grid.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Indices location of the accepted correlation values relative to the
+original location in corrs.</dd>
+<dt>y <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Correlation values that are between lb and ub that are above the threshold.</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Starting index location of the window.</dd>
+<dt>interp_resolution <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Resultion of the interpolated correlation function.</dd>
+<dt>kind <span class="classifier-delimiter">:</span> <span class="classifier">optional, str</span></dt>
+<dd>Type of piecewise interpolation function. See scipy.interpolate.interp1d
+for more details.</dd>
+</dl>
+<dl class="docutils">
+<dt>deg <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The amount of rotation after interpolation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr2d.corr_upsample">
+<code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">corr_upsample</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>start</em>, <em>upsample_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#corr_upsample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.corr_upsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the maximum correlation using the upsampling method.</p>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Indices location of the accepted correlation values relative to the
+original location in corrs.</dd>
+<dt>y <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Correlation values that are between lb and ub that are above the threshold.</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd>Starting index location of the window.</dd>
+<dt>upsample_resolution <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Resultion of the upsampled iris segment.</dd>
+</dl>
+<dl class="docutils">
+<dt>deg <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>The amount of rotation using an upsampled image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr2d.reduced_corr">
+<code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">reduced_corr</code><span class="sig-paren">(</span><em>corrs</em>, <em>threshold</em>, <em>lb=0</em>, <em>ub=None</em>, <em>offset=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#reduced_corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.reduced_corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of correlation values between a lower bound and upper bound
+that only includes the values above the threshold. If there is no correlation
+found greater then the threshold within the bounds then CorrelationBelowThreshold
+exception is raised. If there is not enough points founds for interpolation
+then LackingInterpPoints is raised. See scipy.interpolate.interp1d for more
+details.</p>
+<dl class="docutils">
+<dt>corrs <span class="classifier-delimiter">:</span> <span class="classifier">float list</span></dt>
+<dd>List of correlation values.</dd>
+<dt>threshold <span class="classifier-delimiter">:</span> <span class="classifier">float, 0 =&lt; x &lt; 1</span></dt>
+<dd>Minimum correlation value of correlation, all correlation values less
+then threshold will be ignored.</dd>
+<dt>lb <span class="classifier-delimiter">:</span> <span class="classifier">int, 0 &lt;= x &lt; ub, default = 0</span></dt>
+<dd>Lower bound.</dd>
+<dt>ub <span class="classifier-delimiter">:</span> <span class="classifier">int lb &lt; x &lt; len(corrs), default = len(corrs) - 1</span></dt>
+<dd>Upper bound.</dd>
+</dl>
+<dl class="docutils">
+<dt>x <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Indices location of the accepted correlation values relative to the
+original location in corrs.</dd>
+<dt>y <span class="classifier-delimiter">:</span> <span class="classifier">array_like</span></dt>
+<dd>Correlation values that are between lb and ub that are above the threshold.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="src.torsion.xcorr2d.xcorr2d">
+<code class="descclassname">src.torsion.xcorr2d.</code><code class="descname">xcorr2d</code><span class="sig-paren">(</span><em>iris_seg</em>, <em>reference_window</em>, <em>start=0</em>, <em>prev_deg=None</em>, <em>torsion_mode='interp'</em>, <em>resolution=1</em>, <em>threshold=0</em>, <em>max_angle=25</em>, <em>verborose=False</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/torsion/xcorr2d.html#xcorr2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#src.torsion.xcorr2d.xcorr2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a pseduo 2D cross correlation method to calculate the relative shift
+between features in the given iris segment and a reference window. A moving
+window is taken from the current iris segment and the 2D correlation coefficient
+is calculated between the two matrices. Relative to other image convolution
+methods, in this function the window only moves along one axis (columns) but the
+correlation coefficient is calculated in two dimensions.</p>
+<p>There are two different methods of performing the cross correlation: ‘full’ or
+‘subset’. In both methods, the maximum torsion is limited to +- 25 degrees to
+decrease the total number of comparisions required. The ‘subset’ method involves
+less comparisions but is less robust then the ‘full’ method as less points are
+used to calculate the correlation coefficient.</p>
+<dl class="docutils">
+<dt>‘subset’ - A smaller subset of the original segment is considered as the reference</dt>
+<dd>window. A window of the same size is taken from the current iris segement
+and the correlation coefficient is then computed.’</dd>
+<dt>‘full’ - The reference window is extended by the maximum torsion angle (25 deg)</dt>
+<dd>and the full iris segment is used as the moving window. The size of the
+moving window is equal to the size of the iris segment.</dd>
+</dl>
+<p>There are two modes for quantifying the torsion: ‘interp’ and ‘upsample’.</p>
+<dl class="docutils">
+<dt>‘interp’ - Interpolates the cross correlation coefficient values.</dt>
+<dd>See ‘corr_interp’ for more details.</dd>
+<dt>‘upsample’ - Used when passing an iris segment that has been upsampled.</dt>
+<dd>To accurately calculate the torsion, the resulotion must be equal to the
+upsampled resolution or the iris segment.</dd>
+<dt>See ‘corr_upsample’</dt>
+<dd>for more details.</dd>
+</dl>
+<dl class="docutils">
+<dt>iris_seg <span class="classifier-delimiter">:</span> <span class="classifier">2D array_like NxM</span></dt>
+<dd>Unwrapped iris segment, in polar coordinates.</dd>
+<dt>reference_window <span class="classifier-delimiter">:</span> <span class="classifier">2D array_like NxK</span></dt>
+<dd><p class="first">Intial window used as the reference for all rotation.</p>
+<p>Depending on the size of the reference window relative to the iris_seg,
+a different torsion_mode will be used to perform the cross correlation.</p>
+<dl class="last docutils">
+<dt>‘subset’ - If K &lt; M then a window of size NxK is taken from the iris</dt>
+<dd>segment and compared against the reference window. In total there
+is M - K possible windows available from the iris segment.</dd>
+<dt>‘full’ - If K &gt;= M then the window will be the iris segement and the</dt>
+<dd>size of the window will be unmodified. The size of reference
+window should be K = M + 2 * max angle of torsion. The iris segement is
+then shifted 2 * max angle across the the reference window in order to
+perform the cross correlation.</dd>
+</dl>
+</dd>
+<dt>start <span class="classifier-delimiter">:</span> <span class="classifier">int, default = 0</span></dt>
+<dd>Starting index location of the window. Leave start as 0 for ‘full’ method.</dd>
+<dt>prev_deg <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>Previous rotation angle. If an error occurs, the method will default
+to prev_deg.</dd>
+<dt>torsion_mode <span class="classifier-delimiter">:</span> <span class="classifier">optional, str {‘interp’, ‘upsample’}</span></dt>
+<dd>Select the operation torsion_mode. ‘interp’ will interpolate the Correlation
+result. ‘upsample’ assumes the input iris_seg has been upsampled by a
+specific resolution.</dd>
+<dt>resolution <span class="classifier-delimiter">:</span> <span class="classifier">float, 0 &lt; x &lt; 1, default = 1</span></dt>
+<dd>‘interp’ - The resolution will define dx for the interpolated function.
+‘upsample’ - The resolution corresponds to the upsampled resolution.</dd>
+<dt>threshold <span class="classifier-delimiter">:</span> <span class="classifier">float, 0 =&lt; x &lt; 1, default = 0</span></dt>
+<dd>Minimum correlation value of correlation, all correlation values less
+then threshold will be ignored.</dd>
+<dt>max_angle <span class="classifier-delimiter">:</span> <span class="classifier">float 0 =&lt; x &lt; 360, default = 25</span></dt>
+<dd>The maximum angle of rotation of the eye. Only values within + and -
+max_angle will be considered.</dd>
+</dl>
+<dl class="docutils">
+<dt>deg <span class="classifier-delimiter">:</span> <span class="classifier">float (in degrees)</span></dt>
+<dd>The amount of rotation of the iris relative to the reference window.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.torsion">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.torsion" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">src.torsion package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#src-torsion-estimate-torsion2d-module">src.torsion.estimate_torsion2D module</a></li>
+<li><a class="reference internal" href="#module-src.torsion.manual">src.torsion.manual module</a></li>
+<li><a class="reference internal" href="#module-src.torsion.phase">src.torsion.phase module</a></li>
+<li><a class="reference internal" href="#module-src.torsion.xcorr1d">src.torsion.xcorr1d module</a></li>
+<li><a class="reference internal" href="#module-src.torsion.xcorr2d">src.torsion.xcorr2d module</a></li>
+<li><a class="reference internal" href="#module-src.torsion">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/src.torsion.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Bryden Fogelman, Cyrus Neary, Sam Reid.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/src.torsion.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

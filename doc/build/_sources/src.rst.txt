@@ -1,0 +1,22 @@
+src package
+===========
+
+Submodules
+----------
+
+src.presets module
+------------------
+
+.. automodule:: src.presets
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: src
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -3,12 +3,12 @@ import numpy as np
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname('.'), os.path.pardir)))
 
 
-from src.gui import torsion_application
-from src.data.data import Data
-from src.torsion.xcorr2d import xcorr2d
-from src.video import video as v
-from src.iris.iris import iris_transform
-from src.pupil.pupil import Pupil
+from ota.gui import torsion_application
+from ota.data.data import Data
+from ota.torsion.xcorr2d import xcorr2d
+from ota.video import video as v
+from ota.iris.iris import iris_transform
+from ota.pupil.pupil import Pupil
 
 '''
 Main functions go here
