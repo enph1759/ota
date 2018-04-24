@@ -1,20 +1,23 @@
 import os
 import sys
 
+# UI
 import tkinter as tk
 from tkinter.filedialog import askopenfilename, askdirectory, asksaveasfile
 import matplotlib
 matplotlib.use("TkAgg")
 import numpy as np
 
+# Plotting
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 import time
+import datetime
 from plotly.offline import plot
 import plotly.graph_objs as go
 
-
+# OTA tools
 from ota.gui import coord_click as clk
 from ota.gui import frame_scroll as scroll
 from ota.video import video as vid
@@ -33,6 +36,7 @@ class OcularTorsionApplication(tk.Tk):
     Attributes:
         video: video object
         start_frame: integer
+        reference_frame: reference frame from which torsion is measured
         end_frame: integer
         save_path: string, local directory location to save results to
         pupil_list: dictionary of pupil objects
@@ -86,7 +90,7 @@ class OcularTorsionApplication(tk.Tk):
 
     def run(self, measure_state):
         '''
-        Runs 2D correlation algorithm based on GUI state and common values
+        Runs the 2D correlation algorithm based on GUI state and common values.
 
         Input:
             measure_state: current state of measurement page of the GUI
@@ -134,7 +138,7 @@ class OcularTorsionApplication(tk.Tk):
             self.torsion.append((torsion, metadata, legend_entry))
 
             # Initialize data object and append it to session list
-            data = dat.Data(name=legend_entry,path=self.save_path.get())
+            data = dat.Data(name=datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),path=self.save_path.get())
             torsion_data = [torsion_data[1] for torsion_data in torsion.items()]
             data.set(torsion = torsion_data, start_frame = self.start_frame.get(), pupil_list = self.pupil_list, metadata = metadata_dict)
             self.data.append(data)
@@ -168,7 +172,7 @@ class OcularTorsionApplication(tk.Tk):
                 self.torsion.append((torsion_i, metadata_dict, legend_entry))
 
                 # Initialize data object and append it to session list
-                data = dat.Data(name=legend_entry,path=self.save_path.get())
+                data = dat.Data(name=datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"),path=self.save_path.get())
                 torsion_data = [torsion_data[1] for torsion_data in torsion_i.items()]
                 data.set(torsion = torsion_data, start_frame = self.start_frame.get(), pupil_list = self.pupil_list, metadata = metadata_dict)
                 self.data.append(data)
@@ -201,6 +205,11 @@ class OcularTorsionApplication(tk.Tk):
         '''
         save_path = askdirectory(title="Select A Folder")
         self.save_path.set(save_path)
+
+        if self.data:
+            for dat in self.data:
+                dat.path = save_path
+
 
     def save_results(self):
         '''
