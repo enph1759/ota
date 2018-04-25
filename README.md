@@ -11,5 +11,3 @@ Documentation at: https://enph1759.github.io/ota/
 * Documentation
 	* Quickstart Guides
 	* Examples
-
-a change
